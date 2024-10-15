@@ -1,6 +1,51 @@
+import os
+import subprocess
+import sys
 import streamlit as st
 import requests
 import pandas as pd
+
+# Function to run shell commands
+def run_command(command):
+    result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return result.stdout.decode('utf-8'), result.stderr.decode('utf-8')
+
+# Function to upgrade pip
+def upgrade_pip():
+    try:
+        print("Upgrading pip...")
+        stdout, stderr = run_command(f"{sys.executable} -m pip install --upgrade pip")
+        print(stdout)
+        if stderr:
+            print(f"Error upgrading pip: {stderr}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to upgrade pip: {e.stderr}")
+
+# Function to install system dependencies (Linux)
+def install_system_dependencies():
+    try:
+        print("Installing system dependencies...")
+        # For Debian/Ubuntu
+        command = "sudo apt-get update && sudo apt-get install -y python3-dev libjpeg-dev zlib1g-dev"
+        stdout, stderr = run_command(command)
+        print(stdout)
+        if stderr:
+            print(f"Error installing system dependencies: {stderr}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to install system dependencies: {e.stderr}")
+
+# Function to install required Python packages
+def install_requirements():
+    try:
+        print("Installing Python dependencies...")
+        # Specify your requirements here
+        requirements = "streamlit requests pandas Pillow==9.5.0"
+        stdout, stderr = run_command(f"{sys.executable} -m pip install {requirements}")
+        print(stdout)
+        if stderr:
+            print(f"Error installing dependencies: {stderr}")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to install dependencies: {e.stderr}")
 
 # Function to search CrossRef using the user's query
 def search_crossref(query, rows=10):
@@ -52,21 +97,30 @@ def display_results(data):
     else:
         st.warning("No data to display.")
 
-# Streamlit App
-st.title("Research Paper Finder")
+# Main function
+if __name__ == "__main__":
+    upgrade_pip()
+    
+    # Uncomment the next line if running on a local Linux machine
+    # install_system_dependencies()
+    
+    install_requirements()
 
-# Input field for user's query
-query = st.text_input("Enter your research topic or keywords", value="machine learning optimization")
+    # Start Streamlit App
+    st.title("Research Paper Finder")
 
-# Number of papers to retrieve
-num_papers = st.slider("Select number of papers to retrieve", min_value=5, max_value=50, value=10)
+    # Input field for user's query
+    query = st.text_input("Enter your research topic or keywords", value="machine learning optimization")
 
-# Search button
-if st.button("Search"):
-    # Fetch and display results
-    if query:
-        with st.spinner('Searching for papers...'):
-            response_data = search_crossref(query, rows=num_papers)
-            display_results(response_data)
-    else:
-        st.warning("Please enter a search query.")
+    # Number of papers to retrieve
+    num_papers = st.slider("Select number of papers to retrieve", min_value=5, max_value=50, value=10)
+
+    # Search button
+    if st.button("Search"):
+        # Fetch and display results
+        if query:
+            with st.spinner('Searching for papers...'):
+                response_data = search_crossref(query, rows=num_papers)
+                display_results(response_data)
+        else:
+            st.warning("Please enter a search query.")
