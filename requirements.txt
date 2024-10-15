@@ -1,3 +1,4 @@
-streamlit==1.26.0  # Streamlit for building the web app
-requests==2.31.0   # For making HTTP requests to CrossRef API
-pandas==2.1.1      # For displaying the results in a tabular format
+streamlit==1.26.0
+requests==2.31.0
+pandas==2.1.1
+Pillow==9.5.0  # Ensure a compatible version to avoid issues
