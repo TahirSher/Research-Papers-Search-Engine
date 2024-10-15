@@ -1,37 +1,7 @@
-import os
-import subprocess
-import sys
 import streamlit as st
 import requests
 import pandas as pd
 from transformers import pipeline
-
-# Function to run shell commands
-def run_command(command):
-    result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return result.stdout.decode('utf-8'), result.stderr.decode('utf-8')
-
-# Function to upgrade pip
-def upgrade_pip():
-    try:
-        print("Upgrading pip...")
-        stdout, stderr = run_command(f"{sys.executable} -m pip install --upgrade pip")
-        print(stdout)
-        if stderr:
-            print(f"Error upgrading pip: {stderr}")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to upgrade pip: {e.stderr}")
-
-# Function to install required Python packages from requirements.txt
-def install_requirements():
-    try:
-        print("Installing Python dependencies from requirements.txt...")
-        stdout, stderr = run_command(f"{sys.executable} -m pip install -r requirements.txt")
-        print(stdout)
-        if stderr:
-            print(f"Error installing dependencies: {stderr}")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to install dependencies: {e.stderr}")
 
 # Function to search CrossRef using the user's query
 def search_crossref(query, rows=10):
@@ -81,15 +51,12 @@ def display_results(data):
 
 # Function to summarize text
 def summarize_text(text):
-    summarizer = pipeline("summarization", model="Ameer05/bart-large-cnn-samsum-rescom-finetuned-resume-summarizer-10-epoch")pipeline("text2text-generation", model="JorgeSarry/est5-summarize")
+    summarizer = pipeline("summarization", model="Ameer05/bart-large-cnn-samsum-rescom-finetuned-resume-summarizer-10-epoch")
     summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
     return summary[0]['generated_text']
 
 # Main function
 if __name__ == "__main__":
-    upgrade_pip()
-    install_requirements()
-
     # Start Streamlit App
     st.title("Research Paper Finder and Text Summarizer")
 
