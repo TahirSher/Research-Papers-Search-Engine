@@ -54,13 +54,13 @@ def display_results(data):
 # Function to summarize text using the specified model
 def summarize_text(text):
     try:
+        # Initialize the summarization model
         summarizer = pipeline("text2text-generation", model="spacemanidol/flan-t5-large-website-summarizer", framework="pt")
         summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
         return summary[0]['generated_text']
     except Exception as e:
         return f"An error occurred: {e}"
 
-# Test the summarizer
 result = summarize_text("Artificial intelligence is revolutionizing many industries.")
 print(result)
 
