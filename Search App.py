@@ -21,26 +21,11 @@ def upgrade_pip():
     except subprocess.CalledProcessError as e:
         print(f"Failed to upgrade pip: {e.stderr}")
 
-# Function to install system dependencies (Linux)
-def install_system_dependencies():
-    try:
-        print("Installing system dependencies...")
-        # For Debian/Ubuntu
-        command = "sudo apt-get update && sudo apt-get install -y python3-dev libjpeg-dev zlib1g-dev"
-        stdout, stderr = run_command(command)
-        print(stdout)
-        if stderr:
-            print(f"Error installing system dependencies: {stderr}")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to install system dependencies: {e.stderr}")
-
-# Function to install required Python packages
+# Function to install required Python packages from requirements.txt
 def install_requirements():
     try:
-        print("Installing Python dependencies...")
-        # Specify your requirements here
-        requirements = "streamlit requests pandas Pillow==9.5.0"
-        stdout, stderr = run_command(f"{sys.executable} -m pip install {requirements}")
+        print("Installing Python dependencies from requirements.txt...")
+        stdout, stderr = run_command(f"{sys.executable} -m pip install -r requirements.txt")
         print(stdout)
         if stderr:
             print(f"Error installing dependencies: {stderr}")
@@ -101,9 +86,7 @@ def display_results(data):
 if __name__ == "__main__":
     upgrade_pip()
     
-    # Uncomment the next line if running on a local Linux machine
-    # install_system_dependencies()
-    
+    # Install requirements from requirements.txt
     install_requirements()
 
     # Start Streamlit App
