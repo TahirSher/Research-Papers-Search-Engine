@@ -51,6 +51,7 @@ def display_results(data):
 
 # Function to summarize text
 def summarize_text(text):
+    # Initialize the summarizer with the correct model
     summarizer = pipeline("summarization", model="Ameer05/bart-large-cnn-samsum-rescom-finetuned-resume-summarizer-10-epoch")
     summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
     return summary[0]['generated_text']
