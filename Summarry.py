@@ -54,24 +54,15 @@ def display_results(data):
 # Function to summarize text using the specified model
 def summarize_text(text):
     try:
-        # Initialize the summarization model
         summarizer = pipeline("text2text-generation", model="spacemanidol/flan-t5-large-website-summarizer", framework="pt")
         summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
         return summary[0]['generated_text']
     except Exception as e:
-        st.error(f"An error occurred during summarization: {e}")
-        return "Summary could not be generated."
+        return f"An error occurred: {e}"
 
-# Function to generate text (if you want to keep this)
-def generate_text(text):
-    try:
-        # Initialize the text generation model
-        text_generator = pipeline("text2text-generation", model="JorgeSarry/est5-summarize")
-        generated_text = text_generator(text, max_length=150, min_length=50, do_sample=False)
-        return generated_text[0]['generated_text']
-    except Exception as e:
-        st.error(f"An error occurred during text generation: {e}")
-        return "Generated text could not be created."
+# Test the summarizer
+result = summarize_text("Artificial intelligence is revolutionizing many industries.")
+print(result)
 
 
 # Main function
