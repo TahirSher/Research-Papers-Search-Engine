@@ -2,4 +2,4 @@ streamlit
 requests
 pandas
 transformers
-tensorflow
+torch
