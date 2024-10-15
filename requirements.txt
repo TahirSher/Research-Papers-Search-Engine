@@ -1,6 +1,4 @@
-streamlit==1.21.0
-requests==2.31.0
-pandas==1.5.3  # Use a compatible version
-Pillow==9.5.0
-transformers==4.29.2
-torch==2.2.2   # Use an available version
+streamlit
+requests
+pandas
+transformers
