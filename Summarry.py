@@ -2,7 +2,6 @@ import streamlit as st
 import requests
 import pandas as pd
 from transformers import pipeline
-import torch
 
 # Function to search CrossRef using the user's query
 def search_crossref(query, rows=10):
