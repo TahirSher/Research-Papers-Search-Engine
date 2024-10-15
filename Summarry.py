@@ -81,7 +81,7 @@ def display_results(data):
 
 # Function to summarize text
 def summarize_text(text):
-    summarizer = pipeline("text2text-generation", model="JorgeSarry/est5-summarize")
+    summarizer = pipeline("summarization", model="Ameer05/bart-large-cnn-samsum-rescom-finetuned-resume-summarizer-10-epoch")pipeline("text2text-generation", model="JorgeSarry/est5-summarize")
     summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
     return summary[0]['generated_text']
 
