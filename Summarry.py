@@ -49,7 +49,7 @@ def display_results(data):
     else:
         st.warning("No data to display.")
 
-# Function to summarize text using the new model
+# Function to summarize text using the specified model
 def summarize_text(text):
     try:
         # Initialize the summarization model
@@ -60,7 +60,7 @@ def summarize_text(text):
         st.error(f"An error occurred during summarization: {e}")
         return "Summary could not be generated."
 
-# Function to generate text (if you still want to keep this)
+# Function to generate text (if you want to keep this)
 def generate_text(text):
     try:
         # Initialize the text generation model
