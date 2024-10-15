@@ -4,6 +4,7 @@ import sys
 import streamlit as st
 import requests
 import pandas as pd
+from transformers import pipeline
 
 # Function to run shell commands
 def run_command(command):
@@ -34,20 +35,17 @@ def install_requirements():
 
 # Function to search CrossRef using the user's query
 def search_crossref(query, rows=10):
-    # CrossRef API endpoint
     url = "https://api.crossref.org/works"
     
-    # Parameters for the API request
     params = {
-        "query": query,  # The search query from the user
-        "rows": rows,    # Number of results to return
-        "filter": "type:journal-article"  # Filter for journal articles only
+        "query": query,
+        "rows": rows,
+        "filter": "type:journal-article"
     }
     
     try:
-        # Send the GET request to CrossRef API
         response = requests.get(url, params=params)
-        response.raise_for_status()  # Raise an error for bad responses
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as e:
         st.error(f"HTTP error occurred: {e}")
@@ -76,34 +74,47 @@ def display_results(data):
             }
             paper_list.append(paper)
         
-        # Convert list of papers to a Pandas DataFrame for easy display
         df = pd.DataFrame(paper_list)
         st.write(df)
     else:
         st.warning("No data to display.")
 
+# Function to summarize text
+def summarize_text(text):
+    summarizer = pipeline("text2text-generation", model="JorgeSarry/est5-summarize")
+    summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
+    return summary[0]['generated_text']
+
 # Main function
 if __name__ == "__main__":
     upgrade_pip()
-    
-    # Install requirements from requirements.txt
     install_requirements()
 
     # Start Streamlit App
-    st.title("Research Paper Finder")
+    st.title("Research Paper Finder and Text Summarizer")
 
-    # Input field for user's query
+    # Section for Research Paper Finder
+    st.subheader("Find Research Papers")
     query = st.text_input("Enter your research topic or keywords", value="machine learning optimization")
-
-    # Number of papers to retrieve
     num_papers = st.slider("Select number of papers to retrieve", min_value=5, max_value=50, value=10)
 
-    # Search button
     if st.button("Search"):
-        # Fetch and display results
         if query:
             with st.spinner('Searching for papers...'):
                 response_data = search_crossref(query, rows=num_papers)
                 display_results(response_data)
         else:
             st.warning("Please enter a search query.")
+
+    # Section for Text Summarizer
+    st.subheader("Summarize Text")
+    user_text = st.text_area("Enter text to summarize", height=200)
+
+    if st.button("Summarize"):
+        if user_text:
+            with st.spinner('Summarizing text...'):
+                summary = summarize_text(user_text)
+                st.success("Summary:")
+                st.write(summary)
+        else:
+            st.warning("Please enter text to summarize.")
