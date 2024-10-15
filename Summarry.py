@@ -49,8 +49,6 @@ def display_results(data):
     else:
         st.warning("No data to display.")
 
-from transformers import pipeline
-
 # Function to summarize text
 def summarize_text(text):
     try:
@@ -97,19 +95,19 @@ if __name__ == "__main__":
     user_text = st.text_area("Enter text to summarize", height=200)
 
     if st.button("Summarize"):
-    if user_text:
-        with st.spinner('Summarizing text...'):
-            summary = summarize_text(user_text)
-            st.success("Summary:")
-            st.write(summary)
-    else:
-        st.warning("Please enter text to summarize.")
+        if user_text:
+            with st.spinner('Summarizing text...'):
+                summary = summarize_text(user_text)
+                st.success("Summary:")
+                st.write(summary)
+        else:
+            st.warning("Please enter text to summarize.")
 
-if st.button("Generate Text"):
-    if user_text:
-        with st.spinner('Generating text...'):
-            generated = generate_text(user_text)
-            st.success("Generated Text:")
-            st.write(generated)
-    else:
-        st.warning("Please enter text to generate from.")
+    if st.button("Generate Text"):
+        if user_text:
+            with st.spinner('Generating text...'):
+                generated = generate_text(user_text)
+                st.success("Generated Text:")
+                st.write(generated)
+        else:
+            st.warning("Please enter text to generate from.")
