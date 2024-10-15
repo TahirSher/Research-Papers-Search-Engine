@@ -51,20 +51,6 @@ def display_results(data):
     else:
         st.warning("No data to display.")
 
-# Function to summarize text using the specified model
-def summarize_text(text):
-    try:
-        # Initialize the summarization model
-        summarizer = pipeline("text2text-generation", model="spacemanidol/flan-t5-large-website-summarizer", framework="pt")
-        summary = summarizer(text, max_length=150, min_length=50, do_sample=False)
-        return summary[0]['generated_text']
-    except Exception as e:
-        return f"An error occurred: {e}"
-
-result = summarize_text("Artificial intelligence is revolutionizing many industries.")
-print(result)
-
-
 # Main function
 if __name__ == "__main__":
     # Start Streamlit App
@@ -82,25 +68,3 @@ if __name__ == "__main__":
                 display_results(response_data)
         else:
             st.warning("Please enter a search query.")
-
-    # Section for Text Summarizer
-    st.subheader("Summarize Text")
-    user_text = st.text_area("Enter text to summarize", height=200)
-
-    if st.button("Summarize"):
-        if user_text:
-            with st.spinner('Summarizing text...'):
-                summary = summarize_text(user_text)
-                st.success("Summary:")
-                st.write(summary)
-        else:
-            st.warning("Please enter text to summarize.")
-
-    if st.button("Generate Text"):
-        if user_text:
-            with st.spinner('Generating text...'):
-                generated = generate_text(user_text)
-                st.success("Generated Text:")
-                st.write(generated)
-        else:
-            st.warning("Please enter text to generate from.")
